@@ -5,11 +5,17 @@ import org.springframework.boot.runApplication
 
 @SpringBootApplication
 class JavaCountriesApplication
-
-    val ourCountryList: CountryList= CountryList()
-
-    fun main(args: Array<String>)
+{
+    companion object
     {
-        runApplication<JavaCountriesApplication>(*args)
+        lateinit var ourCountryList: CountryList
+
+        @JvmStatic
+        fun main(args: Array<String>)
+        {
+            ourCountryList = CountryList()
+            runApplication<JavaCountriesApplication>(*args)
+        }
     }
+}
 

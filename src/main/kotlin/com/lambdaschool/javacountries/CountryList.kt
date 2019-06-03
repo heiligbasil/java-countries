@@ -210,4 +210,31 @@ class CountryList
         countryList.add(Country("Seychelles", 95702, 460, 36))
     }
 
+    fun findCountry(tester: CheckCountry): Country?
+    {
+        for (e in countryList)
+        {
+            if (tester.test(e))
+            {
+                return e
+            }
+        }
+        return null
+    }
+
+    fun findCountries(tester: CheckCountry): java.util.ArrayList<Country>
+    {
+        val tempEmpList = java.util.ArrayList<Country>()
+
+        for (e in countryList)
+        {
+            if (tester.test(e))
+            {
+                tempEmpList.add(e)
+            }
+        }
+
+        return tempEmpList
+    }
+
 }
