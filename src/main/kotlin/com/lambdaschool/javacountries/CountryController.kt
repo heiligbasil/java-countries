@@ -2,12 +2,9 @@ package com.lambdaschool.javacountries
 
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-
-import java.util.ArrayList
 
 @RestController
 @RequestMapping("/names")
@@ -26,35 +23,46 @@ class CountryController
     fun getCountriesByLetter(@PathVariable letter: String): ResponseEntity<*>
     {
         val sortedList: List<Country> = JavaCountriesApplication.ourCountryList.countryList.sortedWith(compareBy { it.name })
-        val filterSortedList: List<Country> = sortedList.filter { it.name.substring(0, 1).toLowerCase() == letter.toLowerCase() }
+        val filteredSortedList: List<Country> = sortedList.filter { it.name.substring(0, 1).toLowerCase() == letter.toLowerCase() }
 
-        return ResponseEntity<Any>(filterSortedList, HttpStatus.OK)
+        return ResponseEntity<Any>(filteredSortedList, HttpStatus.OK)
     }
 
     @RequestMapping(value = ["/size/{number}"], produces = ["application/json"])
     fun getCountriesByLength(@PathVariable number: Int): ResponseEntity<*>
     {
         val sortedList: List<Country> = JavaCountriesApplication.ourCountryList.countryList.sortedWith(compareBy { it.name })
-        val filterSortedList: List<Country> = sortedList.filter { it.name.length >= number }
+        val filteredSortedList: List<Country> = sortedList.filter { it.name.length >= number }
 
-        return ResponseEntity<Any>(filterSortedList, HttpStatus.OK)
+        return ResponseEntity<Any>(filteredSortedList, HttpStatus.OK)
+    }
+}
+
+@RestController
+@RequestMapping("/population")
+class CountryController2
+{
+    @RequestMapping(value = ["/size/{people}"], produces = ["application/json"])
+    fun getCountriesByPopulation(@PathVariable people: Long): ResponseEntity<*>
+    {
+        val filteredList: List<Country> = JavaCountriesApplication.ourCountryList.countryList.filter { it.population >= people }
+
+        return ResponseEntity<Any>(filteredList, HttpStatus.OK)
     }
 
-/*    //localhost:2019/data/country/2
-    @GetMapping(value = ["/country/{id}"], produces = ["application/json"])
-    fun getEmpDetail(@PathVariable id: Long): ResponseEntity<*>
+    @RequestMapping(value = ["/min"], produces = ["application/json"])
+    fun getCountryWithSmallestPopulation(): ResponseEntity<*>
     {
-        val rtnCnt: Country? = JavaCountriesApplication.ourCountryList.findCountry({ it -> (it.age() == age) })
+        val country: Country? = JavaCountriesApplication.ourCountryList.countryList.minBy { it.population }
 
-        return ResponseEntity<Any>(rtnCnt, HttpStatus.OK)
-    }*/
+        return ResponseEntity<Any>(country, HttpStatus.OK)
+    }
 
-/*    // localhost:8080/data/countries/s
-    @GetMapping(value = ["/countries/{letter}"], produces = ["application/json"])
-    fun getCountries(@PathVariable letter: Char): ResponseEntity<*>
+    @RequestMapping(value = ["/max"], produces = ["application/json"])
+    fun getCountryWithLargestPopulation(): ResponseEntity<*>
     {
-        val rtnCnts: ArrayList<Country> = JavaCountriesApplication.ourCountryList.findCountries( { it -> it.name().toUpperCase().charAt(0) == Character.toUpperCase(letter) })
+        val country: Country? = JavaCountriesApplication.ourCountryList.countryList.maxBy { it.population }
 
-        return ResponseEntity<ArrayList<Country>>(rtnCnts, HttpStatus.OK)
-    }*/
+        return ResponseEntity<Any>(country, HttpStatus.OK)
+    }
 }
