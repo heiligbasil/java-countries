@@ -66,3 +66,33 @@ class CountryController2
         return ResponseEntity<Any>(country, HttpStatus.OK)
     }
 }
+
+@RestController
+@RequestMapping("/age")
+class CountryController3
+{
+    @RequestMapping(value = ["/age/{age}"], produces = ["application/json"])
+    fun getCountriesByPopulation(@PathVariable age: Long): ResponseEntity<*>
+    {
+        val filteredList: List<Country> = JavaCountriesApplication.ourCountryList.countryList.filter { it.age >= age }
+
+        return ResponseEntity<Any>(filteredList, HttpStatus.OK)
+    }
+
+
+    @RequestMapping(value = ["/min"], produces = ["application/json"])
+    fun getCountryWithSmallestPopulation(): ResponseEntity<*>
+    {
+        val country: Country? = JavaCountriesApplication.ourCountryList.countryList.minBy { it.age }
+
+        return ResponseEntity<Any>(country, HttpStatus.OK)
+    }
+
+    @RequestMapping(value = ["/max"], produces = ["application/json"])
+    fun getCountryWithLargestPopulation(): ResponseEntity<*>
+    {
+        val country: Country? = JavaCountriesApplication.ourCountryList.countryList.maxBy { it.age }
+
+        return ResponseEntity<Any>(country, HttpStatus.OK)
+    }
+}
