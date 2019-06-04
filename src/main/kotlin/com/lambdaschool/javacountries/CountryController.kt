@@ -65,6 +65,27 @@ class CountryController2
 
         return ResponseEntity<Any>(country, HttpStatus.OK)
     }
+
+
+    @RequestMapping(value = ["/median"], produces = ["application/json"])
+    fun getCountryMedianPopulation(): ResponseEntity<*>
+    {
+        val sortedList: List<Country> = JavaCountriesApplication.ourCountryList.countryList.sortedWith(compareBy { it.population })
+
+        val country: Country;
+        val medianIndex: Int = sortedList.size.div(2)
+
+        if (sortedList.size % 2 == 0)
+        {
+            country = sortedList.get(medianIndex)
+        }
+        else
+        {
+            country = sortedList.get(medianIndex - 1)
+        }
+
+        return ResponseEntity<Any>(country, HttpStatus.OK)
+    }
 }
 
 @RestController
@@ -92,6 +113,26 @@ class CountryController3
     fun getCountryWithLargestPopulation(): ResponseEntity<*>
     {
         val country: Country? = JavaCountriesApplication.ourCountryList.countryList.maxBy { it.age }
+
+        return ResponseEntity<Any>(country, HttpStatus.OK)
+    }
+
+    @RequestMapping(value = ["/median"], produces = ["application/json"])
+    fun getCountryMedianAge(): ResponseEntity<*>
+    {
+        val sortedList: List<Country> = JavaCountriesApplication.ourCountryList.countryList.sortedWith(compareBy { it.age })
+
+        val country: Country;
+        val medianIndex: Int = sortedList.size.div(2)
+
+        if (sortedList.size % 2 == 0)
+        {
+            country = sortedList.get(medianIndex)
+        }
+        else
+        {
+            country = sortedList.get(medianIndex - 1)
+        }
 
         return ResponseEntity<Any>(country, HttpStatus.OK)
     }
