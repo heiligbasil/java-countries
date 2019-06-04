@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.ArrayList
 
 @RestController
-@RequestMapping("/data")
+@RequestMapping("/names")
 class CountryController
 {
     //localhost:2019/data/allCountries
-    @RequestMapping(value = ["/allcountries"], produces = ["application/json"])
+    @RequestMapping(value = ["/all"], produces = ["application/json"])
     fun getAllCountries(): ResponseEntity<*>
     {
         JavaCountriesApplication.ourCountryList.countryList.sortWith(Comparator { c1, c2 -> c1.name.compareTo(c2.name, true) })
@@ -22,11 +22,20 @@ class CountryController
         return ResponseEntity<Any>(JavaCountriesApplication.ourCountryList.countryList, HttpStatus.OK)
     }
 
-    @RequestMapping(value = ["/countries/{letter}"], produces = ["application/json"])
+    @RequestMapping(value = ["/start/{letter}"], produces = ["application/json"])
     fun getCountriesByLetter(@PathVariable letter: String): ResponseEntity<*>
     {
         val sortedList: List<Country> = JavaCountriesApplication.ourCountryList.countryList.sortedWith(compareBy { it.name })
         val filterSortedList: List<Country> = sortedList.filter { it.name.substring(0, 1).toLowerCase() == letter.toLowerCase() }
+
+        return ResponseEntity<Any>(filterSortedList, HttpStatus.OK)
+    }
+
+    @RequestMapping(value = ["/size/{number}"], produces = ["application/json"])
+    fun getCountriesByLength(@PathVariable number: Int): ResponseEntity<*>
+    {
+        val sortedList: List<Country> = JavaCountriesApplication.ourCountryList.countryList.sortedWith(compareBy { it.name })
+        val filterSortedList: List<Country> = sortedList.filter { it.name.length >= number }
 
         return ResponseEntity<Any>(filterSortedList, HttpStatus.OK)
     }
